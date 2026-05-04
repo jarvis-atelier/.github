@@ -1,0 +1,145 @@
+# Cómo contribuir
+
+Gracias por querer aportar a un proyecto de Jarvis Atelier. Esta guía cubre el flujo de trabajo que usamos en todos nuestros repos. Si algún proyecto tiene reglas adicionales, van a estar en su propio `CONTRIBUTING.md` y mandan sobre lo que dice acá.
+
+## Antes de empezar
+
+1. **Buscá si ya existe.** Revisá issues abiertos y cerrados antes de crear uno nuevo o ponerte a codear.
+2. **Discutí cambios grandes primero.** Si vas a tocar arquitectura, agregar una dependencia pesada o reescribir un módulo entero, abrí un issue de discusión antes del PR. Nadie quiere ver 2000 líneas de diff que rechazar.
+3. **Leé el README y la doc del proyecto.** Cada repo tiene su contexto: stack específico, convenciones, decisiones tomadas. No las pises sin entender por qué están.
+
+## Setup local
+
+```bash
+# Clonar
+git clone https://github.com/jarvis-atelier/<repo>.git
+cd <repo>
+
+# Instalar dependencias (la mayoría de repos usan pnpm)
+pnpm install
+
+# Variables de entorno
+cp .env.example .env
+# Completá los valores que correspondan
+
+# Base de datos (en repos con Prisma)
+pnpm prisma migrate dev
+
+# Levantar en dev
+pnpm dev
+```
+
+Si algún paso falla, **abrí un issue** en vez de hackear el setup. Si te falla a vos, le falla al próximo.
+
+## Workflow de branches
+
+Trabajamos con trunk-based + branches cortas. Nada de branches que vivan dos semanas.
+
+- `main` — siempre desplegable
+- `feat/<scope>-<descripcion-corta>` — nuevas features
+- `fix/<scope>-<descripcion-corta>` — bugfixes
+- `refactor/<scope>-<descripcion-corta>` — refactors sin cambio de comportamiento
+- `chore/<descripcion>` — config, deps, tooling
+- `docs/<descripcion>` — solo documentación
+
+Ejemplos:
+- `feat/auth-magic-link-login`
+- `fix/checkout-mp-webhook-retry`
+- `refactor/users-service-extract-query-builder`
+
+## Convenciones de commits
+
+Conventional Commits. Sin atribuciones automáticas de IA.
+
+```
+<tipo>(<scope opcional>): <descripcion en imperativo>
+
+<cuerpo opcional con mas contexto>
+
+<footer opcional con refs a issues>
+```
+
+Tipos: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `perf`, `ci`, `build`, `style`.
+
+Ejemplos:
+
+```
+feat(auth): agregar login con magic link
+fix(checkout): reintentar webhook de Mercado Pago en caso de timeout
+refactor(users): extraer query builder a un servicio dedicado
+docs: actualizar README con instrucciones de Railway
+```
+
+Reglas:
+- Imperativo: "agregar", no "agregado" ni "agrega".
+- Una idea por commit. Si te cuesta resumirlo, probablemente son dos commits.
+- El cuerpo explica el **por qué**, no el **qué** (el qué se ve en el diff).
+
+## Tests
+
+Antes de mandar PR:
+
+- **Unit tests** para lógica nueva (servicios, utilidades, hooks).
+- **Integration tests** para endpoints o flujos que tocan DB.
+- **E2E** para flujos críticos (login, checkout, etc.) — solo si el proyecto los tiene configurados.
+- **Coverage mínimo: 80%** sobre el código nuevo o modificado. No sobre el repo entero.
+
+Comandos típicos:
+
+```bash
+pnpm test              # unit + integration
+pnpm test:e2e          # end-to-end
+pnpm test:coverage     # con reporte de cobertura
+```
+
+Si el cambio es solo docs o config, está bien decirlo en el PR y saltearse tests.
+
+## Lint, format y typecheck
+
+Todo PR tiene que pasar:
+
+```bash
+pnpm lint
+pnpm format:check
+pnpm typecheck   # o tsc --noEmit
+```
+
+Si tu editor no formatea automáticamente, configurá Prettier + ESLint antes de seguir. No vamos a aceptar PRs solo por formato.
+
+## Pull Requests
+
+1. **Una cosa por PR.** Si tu PR mezcla feature + refactor + bugfix, separalo.
+2. **Llenar el template** que está en `.github/PULL_REQUEST_TEMPLATE.md`. No lo borres.
+3. **Linkear issues.** Usá `Closes #123` o `Related to #456` en la descripción.
+4. **Screenshots** si tocás UI (antes/después). Para flujos, GIF corto.
+5. **Self-review** antes de pedir review humana. Leé tu propio diff línea por línea.
+6. **PRs chicos.** Idealmente <400 líneas de diff. PRs gigantes se aprueban tarde y mal.
+7. **Resolver conflictos** vos, no el reviewer. `git rebase main` antes de pedir review.
+
+### Proceso de review
+
+- Mínimo **un approve** de un maintainer antes de mergear.
+- CI tiene que estar en verde (lint, typecheck, tests, build).
+- Comentarios marcados como `nit:` son opcionales; el resto, no.
+- El autor mergea su propio PR (squash & merge por default, salvo que se acuerde otra cosa).
+
+## Reportar bugs y proponer features
+
+- **Bugs:** usá el template de bug report. Incluí pasos para reproducir, entorno y logs.
+- **Features:** usá el template de feature request. Empezá por **el problema**, no por la solución.
+
+## Decisiones de arquitectura
+
+Para cambios grandes (nueva dependencia core, cambio de patrón, migración de servicio), abrí una **ADR** (Architectural Decision Record) en `docs/adr/` del proyecto correspondiente. Formato corto: contexto, decisión, consecuencias.
+
+## Seguridad
+
+¿Encontraste una vulnerabilidad? **No abras un issue público.** Seguí el proceso de [SECURITY.md](./SECURITY.md).
+
+## Código de conducta
+
+Todo aporte cae bajo nuestro [Código de Conducta](./CODE_OF_CONDUCT.md). Léelo antes de participar.
+
+## Preguntas
+
+Si algo no quedó claro, abrí un issue con label `question` o escribí al canal interno del equipo. Mejor preguntar dos veces que asumir mal.
