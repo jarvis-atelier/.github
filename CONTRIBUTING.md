@@ -1,6 +1,6 @@
 # Cómo contribuir
 
-Gracias por querer aportar a un proyecto de Jarvis Atelier. Esta guía cubre el flujo de trabajo que usamos en todos nuestros repos. Si algún proyecto tiene reglas adicionales, van a estar en su propio `CONTRIBUTING.md` y mandan sobre lo que dice acá.
+Gracias por querer aportar a un proyecto de Jarvis Atelier. Esta guía cubre el flujo de trabajo que usamos en **todos** nuestros repos, sin importar el stack (Node, Python, sitios estáticos, lo que sea). Si algún proyecto tiene reglas adicionales, van a estar en su propio `CONTRIBUTING.md` y mandan sobre lo que dice acá.
 
 ## Antes de empezar
 
@@ -10,26 +10,49 @@ Gracias por querer aportar a un proyecto de Jarvis Atelier. Esta guía cubre el 
 
 ## Setup local
 
+**Cada proyecto documenta su setup en su propio `README.md`.** Como mínimo, todo repo de la org debe tener una sección **Quickstart** con:
+
+- Cómo clonar e instalar dependencias
+- Cómo configurar variables de entorno (referencia a `.env.example`)
+- Cómo correr migraciones / seed (si aplica)
+- Cómo levantar el proyecto en modo desarrollo
+
+Comandos base orientativos según los stacks que usamos en el estudio:
+
+**Node (React/Vite, NestJS):**
+
 ```bash
-# Clonar
 git clone https://github.com/jarvis-atelier/<repo>.git
 cd <repo>
-
-# Instalar dependencias (la mayoría de repos usan pnpm)
 pnpm install
-
-# Variables de entorno
 cp .env.example .env
-# Completá los valores que correspondan
-
-# Base de datos (en repos con Prisma)
-pnpm prisma migrate dev
-
-# Levantar en dev
 pnpm dev
 ```
 
-Si algún paso falla, **abrí un issue** en vez de hackear el setup. Si te falla a vos, le falla al próximo.
+**Python (Flask):**
+
+```bash
+git clone https://github.com/jarvis-atelier/<repo>.git
+cd <repo>
+python -m venv .venv
+source .venv/bin/activate     # en Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env
+flask --app app run --debug
+```
+
+**Sitio estático HTML:**
+
+```bash
+git clone https://github.com/jarvis-atelier/<repo>.git
+cd <repo>
+# Si tiene build step (Astro, Eleventy, Vite static):
+pnpm install
+pnpm dev
+# Si es HTML puro: abrí index.html con Live Server o un http-server local
+```
+
+Si algún paso falla siguiendo el README del proyecto, **abrí un issue** en vez de hackear el setup. Si te falla a vos, le falla al próximo.
 
 ## Workflow de branches
 
@@ -79,32 +102,50 @@ Reglas:
 
 Antes de mandar PR:
 
-- **Unit tests** para lógica nueva (servicios, utilidades, hooks).
-- **Integration tests** para endpoints o flujos que tocan DB.
+- **Unit tests** para lógica nueva (servicios, utilidades, hooks, funciones puras).
+- **Integration tests** para endpoints, flujos que tocan DB o servicios externos.
 - **E2E** para flujos críticos (login, checkout, etc.) — solo si el proyecto los tiene configurados.
 - **Coverage mínimo: 80%** sobre el código nuevo o modificado. No sobre el repo entero.
 
-Comandos típicos:
+Comandos según stack (ejecutá los que correspondan al proyecto):
 
 ```bash
-pnpm test              # unit + integration
-pnpm test:e2e          # end-to-end
-pnpm test:coverage     # con reporte de cobertura
+# Node / TypeScript
+pnpm test
+pnpm test:coverage
+
+# Python
+pytest
+pytest --cov
+
+# Sitio estático
+# Validá que buildea correctamente y revisá manualmente los flujos.
+# Si tiene tests configurados (Playwright, Cypress), corrélos.
 ```
 
-Si el cambio es solo docs o config, está bien decirlo en el PR y saltearse tests.
+Si el cambio es solo docs, config o assets estáticos, está bien decirlo en el PR y saltearse tests.
 
 ## Lint, format y typecheck
 
-Todo PR tiene que pasar:
+Cada stack tiene su toolchain. **Todo PR tiene que pasar el lint y el format del repo en el que está.**
 
 ```bash
+# Node / TypeScript
 pnpm lint
 pnpm format:check
 pnpm typecheck   # o tsc --noEmit
+
+# Python
+ruff check .
+ruff format --check .
+mypy .           # si está configurado
+
+# HTML / CSS estático
+pnpm prettier --check .
+# htmlhint, stylelint según corresponda al proyecto
 ```
 
-Si tu editor no formatea automáticamente, configurá Prettier + ESLint antes de seguir. No vamos a aceptar PRs solo por formato.
+Si tu editor no formatea automáticamente, configurá las extensiones correspondientes (Prettier, ESLint, Ruff, etc.) antes de seguir. No vamos a aceptar PRs solo por formato.
 
 ## Pull Requests
 
@@ -119,7 +160,7 @@ Si tu editor no formatea automáticamente, configurá Prettier + ESLint antes de
 ### Proceso de review
 
 - Mínimo **un approve** de un maintainer antes de mergear.
-- CI tiene que estar en verde (lint, typecheck, tests, build).
+- CI tiene que estar en verde (lint, typecheck, tests, build — los que aplique al stack).
 - Comentarios marcados como `nit:` son opcionales; el resto, no.
 - El autor mergea su propio PR (squash & merge por default, salvo que se acuerde otra cosa).
 
@@ -131,6 +172,10 @@ Si tu editor no formatea automáticamente, configurá Prettier + ESLint antes de
 ## Decisiones de arquitectura
 
 Para cambios grandes (nueva dependencia core, cambio de patrón, migración de servicio), abrí una **ADR** (Architectural Decision Record) en `docs/adr/` del proyecto correspondiente. Formato corto: contexto, decisión, consecuencias.
+
+## Crear un proyecto nuevo en la org
+
+Si vas a arrancar un repo nuevo en Jarvis Atelier, **leé primero** [`projects/README.md`](./projects/README.md). Ahí están las reglas de naming, topics, ownership y registro en el catálogo.
 
 ## Seguridad
 

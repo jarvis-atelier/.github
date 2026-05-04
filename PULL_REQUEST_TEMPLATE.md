@@ -16,12 +16,13 @@ Explicá en 2-3 líneas qué cambia y por qué. Nada de "varios fixes" — sé c
 
 - [ ] Probé el cambio en local y funciona
 - [ ] Agregué/actualicé tests (unit, integration o e2e según corresponda)
-- [ ] Pasa el lint (`npm run lint` / `pnpm lint`)
-- [ ] Pasa el typecheck (`tsc --noEmit`)
+- [ ] Pasa el lint del repo
+- [ ] Pasa el format check del repo
+- [ ] Pasa el typecheck del repo (si el stack lo tiene)
 - [ ] Actualicé documentación si era necesario (README, comentarios, Notion, etc.)
-- [ ] No dejé `console.log`, `TODO` huérfanos ni código comentado
+- [ ] No dejé `console.log`, `print` debug, `TODO` huérfanos ni código comentado
 - [ ] Variables de entorno nuevas están documentadas en `.env.example`
-- [ ] Migraciones de Prisma generadas y revisadas (si aplica)
+- [ ] Migraciones de base de datos generadas y revisadas (si aplica)
 - [ ] Sin secrets hardcodeados
 
 ## Issues relacionados
@@ -39,9 +40,10 @@ Si el cambio toca UI, adjuntá antes/después. Para flujos completos, un GIF o v
 
 ## Plan de deploy / rollback
 
-Si requiere pasos especiales (correr seed, ejecutar migración, invalidar cache, configurar variable nueva en Railway/Render), listalos.
+Si requiere pasos especiales (correr seed, ejecutar migración, invalidar cache, configurar variable nueva en Railway/Render, rebuild de assets estáticos), listalos.
 
 - [ ] No requiere pasos especiales
 - [ ] Requiere migración de DB
 - [ ] Requiere variable de entorno nueva
 - [ ] Requiere coordinación con otro servicio
+- [ ] Requiere rebuild / redeploy manual
