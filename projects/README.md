@@ -92,7 +92,7 @@ Cuando arranques un proyecto nuevo en la org, seguí estos pasos **en orden**:
 2. **Creá el repo** siguiendo la [convención de nombres](#convención-de-nombres-de-repos).
 3. **Marcá visibilidad** (privado por default, salvo que sea OSS o producto público).
 4. **Aplicá los topics** correspondientes (lenguaje, stack, tipo, cliente, estado). Ver [topics oficiales](#topics-oficiales).
-5. **Si existe template** del stack, usá "Use this template". Si no, copiá la estructura base de un proyecto similar.
+5. **Elegí el template** correcto según el [árbol de decisión](#cómo-elegir-cuál-usar). Como mínimo siempre arrancás con `template-jarvis-base` (cimiento universal del atelier); si tu stack tiene template específico, ese ya viene con la base adentro. Hacelo con "Use this template" desde GitHub.
 6. **Configurá CODEOWNERS** en `.github/CODEOWNERS` con los owners del repo.
 7. **Configurá branch protection** en `main`: requerir PR + 1 approve + CI verde.
 8. **Escribí el README** con sección Quickstart (ver [`CONTRIBUTING.md`](../CONTRIBUTING.md#setup-local)).
@@ -162,14 +162,48 @@ Todo repo de la org **debe** llevar topics aplicables. Sin topics, no aparece en
 
 Repos marcados como **Template repository**. Usalos con "Use this template" desde GitHub.
 
-| Template                    | Stack                              | Estado       |
-|-----------------------------|------------------------------------|--------------|
-| `template-react-vite`       | React + TypeScript + Vite          | _por crear_  |
-| `template-nestjs-prisma`    | NestJS + Prisma + PostgreSQL       | _por crear_  |
-| `template-flask`            | Python + Flask                     | _por crear cuando aparezca el segundo proyecto Flask_ |
-| `template-static-html`      | HTML/CSS estático (con o sin SSG)  | _por crear cuando aparezca el segundo sitio estático_ |
+| Template                | Rol en el atelier                              | Stack que trae                                | Estado |
+|-------------------------|------------------------------------------------|-----------------------------------------------|--------|
+| `template-jarvis-base`  | Esqueleto universal stack-agnóstico            | Solo lo común: README skeleton, LICENSE (MIT), `.gitignore`, `.gitattributes`, `.editorconfig`, CI placeholder, dependabot, CODEOWNERS, pointers a SECURITY/CONTRIBUTING org-level | ✅ disponible |
+| `template-jarvis-web`   | Default web/frontend del atelier               | React 18 + TypeScript + Vite 5 + Vitest 2 + ESLint 9 + Prettier 3, extiende `base` | ✅ disponible |
+| `template-jarvis-api`   | Default backend del atelier                    | NestJS 10 + Prisma 5 + Postgres 16 + Jest + Supertest + Docker compose, extiende `base` | ✅ disponible |
+| `template-flask`        | Default Python web del atelier                 | Python + Flask                                | _por crear cuando aparezca el segundo proyecto Flask_ |
+| `template-static-html`  | Default sitio estático del atelier             | HTML/CSS estático (con o sin SSG)             | _por crear cuando aparezca el segundo sitio estático_ |
 
-**Política de templates:** crear solo cuando ya tengamos al menos un proyecto del stack en producción y exista intención clara de hacer otro. No creamos templates anticipadamente.
+### Cómo elegir cuál usar
+
+Antes de hacer "Use this template", respondé estas preguntas **en orden**:
+
+**1. ¿Tu proyecto necesita interfaz web?**
+- **No** (CLI, bot, script, integración B2B sin UI) → ir a la pregunta 2.
+- **Sí** → ir a la pregunta 3.
+
+**2. ¿Necesita backend HTTP en TypeScript/Node?**
+- **Sí, NestJS + Prisma + Postgres** (default del atelier) → `template-jarvis-api`.
+- **No, otro stack** (Python, Go, Flask, etc.) → arrancá con `template-jarvis-base` y armá tu setup encima. Cuando aparezca el segundo proyecto del mismo stack, extraemos un template específico.
+
+**3. ¿Tu proyecto es solo frontend o también tiene backend propio?**
+- **Solo frontend** (estático, SPA contra una API ajena, panel administrativo de un servicio externo) → `template-jarvis-web`.
+- **Frontend + backend** → ir a la pregunta 4.
+
+**4. ¿Repos separados (default) o monorepo (excepción)?**
+- **Separados** (lo normal según [polyrepo](#convención-de-nombres-de-repos)) → creá **dos repos**: uno con `template-jarvis-web` (sufijo `-web`) y otro con `template-jarvis-api` (sufijo `-api`).
+- **Monorepo** (caso justificado: producto propio chico, MVP unificado, deploy de un solo binario) → arrancá con `template-jarvis-base` y combiná las estructuras dentro de `apps/web/` y `apps/api/`. Ver [guía detallada](https://github.com/jarvis-atelier/docs/blob/main/starter-templates.md).
+
+### Cuándo NO usar template
+
+- **Experimento descartable** (< 1 semana, no va a producción) — `git init` y listo, sin ceremonia.
+- **Spike técnico** que sabés que vas a tirar — ídem.
+- **Fork de un proyecto open-source** — heredás la estructura del fuente. No fuerces la del atelier encima.
+- **Stack que no calza con ningún template** y que sabés que es proyecto único — base + manual; no inventes un template para un stack que vas a usar UNA vez.
+
+### Política de templates
+
+Crear template para un stack solo cuando **ya haya al menos un proyecto del stack en producción** Y exista intención clara de hacer otro. No creamos templates anticipadamente — el primer proyecto de un stack se hace a mano, el segundo se templateiza.
+
+**Excepción**: `template-jarvis-base` no es stack-template, es el **cimiento universal**. Existe desde día 1 porque cualquier repo del atelier lo necesita (README, LICENSE, .gitignore, line endings, CI scaffolding).
+
+> **Más profundidad**: para entender la filosofía detrás de los templates, qué incluye cada uno, cómo extender la base, y cuándo hacer monorepo vs polyrepo, ver la guía completa en [`docs/starter-templates.md`](https://github.com/jarvis-atelier/docs/blob/main/starter-templates.md).
 
 ---
 
