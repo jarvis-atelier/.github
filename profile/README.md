@@ -2,6 +2,10 @@
 
 Construimos software a medida para clientes y desarrollamos productos propios. Equipo chico, foco grande, decisiones técnicas con fundamento.
 
+> 👋 **¿Te sumaste al equipo?** Empezá por la **[guía de onboarding](https://github.com/jarvis-atelier/docs/blob/main/onboarding.md)** — toolchain, acceso a la org, tu primer día, cómo arrancar un proyecto, y cómo darle contexto del atelier a tu asistente de IA.
+>
+> ¿Vas a crear un proyecto nuevo? Mirá el **[catálogo + árbol de decisión de templates](https://github.com/jarvis-atelier/.github/blob/main/projects/README.md#templates-disponibles)**.
+
 ## Qué hacemos
 
 - **Desarrollo a medida** — aplicaciones web full-stack para empresas que necesitan algo que no compran de góndola.
