@@ -240,7 +240,8 @@ Proyectos en desarrollo activo. Ordenado por fecha de inicio descendente.
 
 | Proyecto | Repo | Cliente / Producto | Stack | Lenguaje | Owner | Inicio | Notas |
 |----------|------|--------------------|-------|----------|-------|--------|-------|
-| _(primer proyecto va acá)_ |  |  |  |  |  |  |  |
+| **CASA SALCO ERP** | [`client-casa-salco`](https://github.com/jarvis-atelier/client-casa-salco) | Casa Salco | Flask + SocketIO + Celery + Pydantic / React + Vite + TS + Tailwind + shadcn/ui / Tauri (Fase 2 POS) / PostgreSQL + SQLite + Redis | Python + TypeScript | @oarivas | 2026-05-04 | ERP multi-sucursal. Reingeniería del legacy Harbour. Hardware AFIP/Kretz/Systel. Deploy Railway/Fly. Default branch renombrado de `master` a `main` el 2026-05-09. |
+| **AutoBit** | [`client-giuliano`](https://github.com/jarvis-atelier/client-giuliano) | Giuliano | Flask 3 + htmx + Jinja2 + SQLAlchemy 2 + Alembic + SQLite (con FTS5) + structlog + pytest | Python | @oarivas | 2026-05-05 | PMV Marketplace Automotriz (Perú) — conecta dueños de vehículos con talleres y tiendas de repuestos. PMV completo (10 lotes, 17 phases, ~150 tests). Default branch renombrado de `master` a `main` el 2026-05-09. |
 
 ---
 
